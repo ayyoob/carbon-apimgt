@@ -7,10 +7,10 @@ import org.wso2.carbon.apimgt.impl.handlers.ScopesIssuer;
 import org.wso2.carbon.apimgt.keymgt.internal.ServiceReferenceHolder;
 import org.wso2.carbon.base.ServerConfigurationException;
 import org.wso2.carbon.identity.application.common.cache.BaseCache;
-import org.wso2.carbon.identity.base.IdentityException;
+import org.wso2.carbon.identity.base.IdentityRuntimeException;
 import org.wso2.carbon.identity.core.util.IdentityConfigParser;
 import org.wso2.carbon.identity.core.util.IdentityCoreConstants;
-import org.wso2.carbon.identity.core.util.IdentityUtil;
+import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.oauth.common.OAuthConstants;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.ResponseHeader;
@@ -55,29 +55,26 @@ public class ExtendedPasswordGrantHandler extends PasswordGrantHandler {
         super.init();
 
         IdentityConfigParser configParser = null;
-        try {
-            configParser = IdentityConfigParser.getInstance();
-            OMElement oauthElem = configParser.getConfigElement(CONFIG_ELEM_OAUTH);
 
-            // Get the required claim uris that needs to be included in the response.
-            parseRequiredHeaderClaimUris(oauthElem.getFirstChildWithName(getQNameWithIdentityNS(REQUIRED_CLAIM_URIS)));
+        configParser = IdentityConfigParser.getInstance();
+        OMElement oauthElem = configParser.getConfigElement(CONFIG_ELEM_OAUTH);
 
-            // read login config
-            parseLoginConfig(oauthElem);
+        // Get the required claim uris that needs to be included in the response.
+        parseRequiredHeaderClaimUris(oauthElem.getFirstChildWithName(getQNameWithIdentityNS(REQUIRED_CLAIM_URIS)));
 
-            userClaimsCache = new BaseCache<String, Claim[]>("UserClaimsCache");
-            if(userClaimsCache != null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Successfully created UserClaimsCache under "+ OAuthConstants.OAUTH_CACHE_MANAGER);
-                }
-            } else {
-                log.error("Error while creating UserClaimsCache");
+        // read login config
+        parseLoginConfig(oauthElem);
+
+        userClaimsCache = new BaseCache<String, Claim[]>("UserClaimsCache");
+        if(userClaimsCache != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Successfully created UserClaimsCache under "+ OAuthConstants.OAUTH_CACHE_MANAGER);
             }
-
-        } catch (ServerConfigurationException e) {
-            log.error("Error when reading the OAuth Configurations. " +
-                    "OAuth related functionality might be affected.", e);
+        } else {
+            log.error("Error while creating UserClaimsCache");
         }
+
+
     }
 
     @Override
@@ -96,8 +93,8 @@ public class ExtendedPasswordGrantHandler extends PasswordGrantHandler {
             int tenantId;
 
             try {
-                tenantId = IdentityUtil.getTenantIdOFUser(username);
-            } catch (IdentityException e) {
+                tenantId = IdentityTenantUtil.getTenantIdOfUser(username);
+            } catch (IdentityRuntimeException e) {
                 throw new IdentityOAuth2Exception(e.getMessage(), e);
             }
 

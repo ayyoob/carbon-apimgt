@@ -426,7 +426,7 @@
             <dependency>
                 <groupId>org.apache.axis2</groupId>
                 <artifactId>axis2-kernel</artifactId>
-                <version>1.6.2</version>
+                <version>${axis2.version}</version>
             </dependency>
 
             <dependency>
@@ -847,7 +847,7 @@
         <carbon.analytics.common.version>5.0.2</carbon.analytics.common.version>
         <carbon.registry.version>4.4.8</carbon.registry.version>
         <carbon.mediation.version>4.4.5</carbon.mediation.version>
-        <carbon.identity.version>4.6.0-M2</carbon.identity.version>
+        <carbon.identity.version>4.6.0-SNAPSHOT</carbon.identity.version>
         <carbon.deployment.version>4.5.3</carbon.deployment.version>
         <carbon.governance.version>4.5.8</carbon.governance.version>
         <carbon.analytics.version>1.0.1</carbon.analytics.version>
@@ -873,13 +873,14 @@
         <maven-bundle-plugin.version>2.5.3</maven-bundle-plugin.version>
 
         <!-- Axis2 Version -->
-        <axis2.wso2.version>1.6.1-wso2v11</axis2.wso2.version>
-        <orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
-        <axis2-transports.version>1.6.1-wso2v11</axis2-transports.version>
-        <axis2.osgi.version.range>[1.6.1.wso2v11, 1.7.0)</axis2.osgi.version.range>
+        <axis2.wso2.version>1.6.1-wso2v14</axis2.wso2.version>
+        <orbit.version.axis2>1.6.1.wso2v14</orbit.version.axis2>
+        <axis2-transports.version>1.6.1-wso2v12</axis2-transports.version>
+        <axis2.osgi.version.range>[1.6.1.wso2v14, 1.7.0)</axis2.osgi.version.range>
         <orbit.version.wsdl4j>1.6.2.wso2v4</orbit.version.wsdl4j>
         <orbit.version.neethi>2.0.4.wso2v4</orbit.version.neethi>
         <rampart.wso2.version>1.6.1.wso2v13</rampart.wso2.version>
+        <axis2.version>1.6.1-wso2v12</axis2.version>
 
         <!-- Apache Axiom -->
         <axiom.version>1.2.11-wso2v6</axiom.version>
@@ -912,7 +913,7 @@
         <synapse.version.handlers>${synapse.version}</synapse.version.handlers>
         <throttle.version.handlers>3.3.0</throttle.version.handlers>
 
-        <libthrift.wso2.version>0.7.wso2v1</libthrift.wso2.version>
+        <libthrift.wso2.version>0.8.0.wso2v1</libthrift.wso2.version>
         <ganalytics.version>4.2.0</ganalytics.version>
         <orbit.version.json>2.0.0.wso2v1</orbit.version.json>
 

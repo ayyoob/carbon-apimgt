@@ -223,7 +223,7 @@ public class APIManagerComponent {
             APIUtil.createSelfSignUpRoles(MultitenantConstants.SUPER_TENANT_ID);
 
             // Initialise KeyManager.
-            KeyManagerHolder.initializeKeyManager(configuration);
+            //KeyManagerHolder.initializeKeyManager(configuration);
             
             // loading white listed scopes
             List<String> whitelist = null;

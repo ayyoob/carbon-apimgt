@@ -37,10 +37,10 @@ import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.keymgt.APIKeyMgtException;
-import org.wso2.carbon.apimgt.keymgt.service.TokenValidationContext;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.identity.base.IdentityException;
+import org.wso2.carbon.identity.base.IdentityRuntimeException;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.registry.core.Registry;
@@ -89,7 +89,7 @@ public class APIKeyMgtUtil {
     public static Connection getDBConnection() throws APIKeyMgtException {
         try {
             return IdentityDatabaseUtil.getDBConnection();
-        } catch (IdentityException e) {
+        } catch (IdentityRuntimeException e) {
             String errMsg = "Error when getting a database connection from the Identity Persistence Manager";
             log.error(errMsg, e);
             throw new APIKeyMgtException(errMsg, e);

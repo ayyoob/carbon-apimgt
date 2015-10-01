@@ -35,8 +35,8 @@ import org.wso2.carbon.apimgt.interceptor.valve.APIThrottleHandler;
 import org.wso2.carbon.apimgt.interceptor.valve.internal.DataHolder;
 import org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageDataPublisher;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.identity.base.IdentityException;
-import org.wso2.carbon.identity.core.util.IdentityUtil;
+import org.wso2.carbon.identity.base.IdentityRuntimeException;
+import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 
 /**
  * APIManagement operations
@@ -82,8 +82,8 @@ public class APIManagerInterceptorOps {
 			                       .setUsername(apiKeyValidationDTO.getEndUserName());
 			try {
 				PrivilegedCarbonContext.getThreadLocalCarbonContext()
-				                       .setTenantId(IdentityUtil.getTenantIdOFUser(userName));
-			} catch (IdentityException e) {
+				                       .setTenantId(IdentityTenantUtil.getTenantIdOfUser(userName));
+			} catch (IdentityRuntimeException e) {
 				log.error("Error while retrieving Tenant Id", e);
 				return false;
 			}

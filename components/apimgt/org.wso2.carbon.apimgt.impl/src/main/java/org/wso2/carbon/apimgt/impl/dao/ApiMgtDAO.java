@@ -67,8 +67,9 @@ import org.wso2.carbon.apimgt.impl.workflow.WorkflowExecutorFactory;
 import org.wso2.carbon.apimgt.impl.workflow.WorkflowStatus;
 import org.wso2.carbon.core.util.CryptoException;
 import org.wso2.carbon.identity.base.IdentityException;
+import org.wso2.carbon.identity.base.IdentityRuntimeException;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
-import org.wso2.carbon.identity.core.util.IdentityUtil;
+import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.oauth.IdentityOAuthAdminException;
 import org.wso2.carbon.identity.oauth.OAuthUtil;
 import org.wso2.carbon.identity.oauth.common.OAuthConstants;
@@ -185,7 +186,7 @@ public class ApiMgtDAO {
 
         //get the tenant id for the corresponding domain
         String tenantAwareUserId = MultitenantUtils.getTenantAwareUsername(loginUserName);
-        int tenantId = IdentityUtil.getTenantIdOFUser(loginUserName);
+        int tenantId = IdentityTenantUtil.getTenantIdOfUser(loginUserName);
 
         if (log.isDebugEnabled()) {
             log.debug("Searching for: " + identifier.getAPIIdentifier() + ", User: " + tenantAwareUserId +
@@ -457,7 +458,7 @@ public class ApiMgtDAO {
 
         //get the tenant id for the corresponding domain
         //String tenantAwareUserId = MultitenantUtils.getTenantAwareUsername(loginUserName);
-        int tenantId = IdentityUtil.getTenantIdOFUser(loginUserName);
+        int tenantId = IdentityTenantUtil.getTenantIdOfUser(loginUserName);
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -544,7 +545,7 @@ public class ApiMgtDAO {
         String loginUserName = getLoginUserName(userId);
 
         String tenantAwareUsername = MultitenantUtils.getTenantAwareUsername(loginUserName);
-        int tenantId = IdentityUtil.getTenantIdOFUser(loginUserName);
+        int tenantId = IdentityTenantUtil.getTenantIdOfUser(loginUserName);
         List<APIInfoDTO> apiInfoDTOList = new ArrayList<APIInfoDTO>();
         Connection conn = null;
         PreparedStatement ps = null;
@@ -681,8 +682,7 @@ public class ApiMgtDAO {
                                         String statusEnum)
             throws APIManagementException, IdentityException {
         String tenantAwareUsername = MultitenantUtils.getTenantAwareUsername(userId);
-        int tenantId = 0;
-        IdentityUtil.getTenantIdOFUser(userId);
+        int tenantId = IdentityTenantUtil.getTenantIdOfUser(userId);
 
         String accessTokenStoreTable = APIConstants.ACCESS_TOKEN_STORE_TABLE;
         if (APIUtil.checkAccessTokenPartitioningEnabled() &&
@@ -1662,8 +1662,8 @@ public class ApiMgtDAO {
 
         int tenantId;
         try {
-            tenantId = IdentityUtil.getTenantIdOFUser(subscriberName);
-        } catch (IdentityException e) {
+            tenantId = IdentityTenantUtil.getTenantIdOfUser(subscriberName);
+        } catch (IdentityRuntimeException e) {
             String msg = "Failed to get tenant id of user : " + subscriberName;
             log.error(msg, e);
             throw new APIManagementException(msg, e);
@@ -1827,7 +1827,7 @@ public class ApiMgtDAO {
             }
          
             ps = connection.prepareStatement(sqlQuery);
-            int tenantId = IdentityUtil.getTenantIdOFUser(subscriber.getName());
+            int tenantId = IdentityTenantUtil.getTenantIdOfUser(subscriber.getName());
             ps.setInt(1, tenantId);
             ps.setString(2, applicationName);
                               
@@ -1862,7 +1862,7 @@ public class ApiMgtDAO {
 
         } catch (SQLException e) {
             handleException("Failed to get SubscribedAPI of :" + subscriber.getName(), e);
-        } catch (IdentityException e) {
+        } catch (IdentityRuntimeException e) {
             handleException("Failed get tenant id of user " + subscriber.getName(), e);
         } finally {
             APIMgtDBUtil.closeAllConnections(ps, connection, result);
@@ -1921,7 +1921,7 @@ public class ApiMgtDAO {
             
             ps = connection.prepareStatement(sqlQuery);
             ps.setString(1, applicationName);
-            int tenantId = IdentityUtil.getTenantIdOFUser(subscriber.getName());
+            int tenantId = IdentityTenantUtil.getTenantIdOfUser(subscriber.getName());
             ps.setInt(2, tenantId);
             ps.setString(3, appIdentifier);
             result = ps.executeQuery();
@@ -1932,7 +1932,7 @@ public class ApiMgtDAO {
 
         } catch (SQLException e) {
             handleException("Failed to get SubscribedAPI of :" + subscriber.getName(), e);
-        } catch (IdentityException e) {
+        } catch (IdentityRuntimeException e) {
             handleException("Failed get tenant id of user " + subscriber.getName(), e);
         } finally {
             APIMgtDBUtil.closeAllConnections(ps, connection, result);
@@ -1990,7 +1990,7 @@ public class ApiMgtDAO {
                     "AND LOWER(SUB.USER_ID) = LOWER(?)))" ; 
         try {
             connection = APIMgtDBUtil.getConnection();
-            int tenantId = IdentityUtil.getTenantIdOFUser(subscriber.getName());  
+            int tenantId = IdentityTenantUtil.getTenantIdOfUser(subscriber.getName());
             if (groupingId != null && !groupingId.equals("null") && !groupingId.equals("")) {
                 if (forceCaseInsensitiveComparisons) {
                     sqlQuery += whereClausewithGroupIdorceCaseInsensitiveComp;
@@ -2052,7 +2052,7 @@ public class ApiMgtDAO {
 
         } catch (SQLException e) {
             handleException("Failed to get SubscribedAPI of :" + subscriber.getName(), e);
-        } catch (IdentityException e) {
+        } catch (IdentityRuntimeException e) {
             handleException("Failed get tenant id of user " + subscriber.getName(), e);
         } finally {
             APIMgtDBUtil.closeAllConnections(ps, connection, result);
@@ -2125,7 +2125,7 @@ public class ApiMgtDAO {
             }
 
             ps = connection.prepareStatement(sqlQuery);
-            int tenantId = IdentityUtil.getTenantIdOFUser(subscriber.getName());
+            int tenantId = IdentityTenantUtil.getTenantIdOfUser(subscriber.getName());
             ps.setInt(1, tenantId);
             if(groupingId != null && !groupingId.equals("null") && !groupingId.isEmpty()){
                 ps.setString(2, groupingId);
@@ -2206,7 +2206,7 @@ public class ApiMgtDAO {
 
         } catch (SQLException e) {
             handleException("Failed to get SubscribedAPI of :" + subscriber.getName(), e);
-        } catch (IdentityException e) {
+        } catch (IdentityRuntimeException e) {
             handleException("Failed get tenant id of user " + subscriber.getName(), e);
         } finally {
             APIMgtDBUtil.closeAllConnections(ps, connection, result);
@@ -4387,8 +4387,8 @@ public class ApiMgtDAO {
             ps.setString(4, loginUserName);
             int tenantId;
             try {
-                tenantId = IdentityUtil.getTenantIdOFUser(loginUserName);
-            } catch (IdentityException e) {
+                tenantId = IdentityTenantUtil.getTenantIdOfUser(loginUserName);
+            } catch (IdentityRuntimeException e) {
                 String msg = "Failed to get tenant id of user : " + loginUserName;
                 log.error(msg, e);
                 throw new APIManagementException(msg, e);
@@ -4796,8 +4796,8 @@ public class ApiMgtDAO {
         try {
             int tenantId;
             try {
-                tenantId = IdentityUtil.getTenantIdOFUser(userId);
-            } catch (IdentityException e) {
+                tenantId = IdentityTenantUtil.getTenantIdOfUser(userId);
+            } catch (IdentityRuntimeException e) {
                 String msg = "Failed to get tenant id of user : " + userId;
                 log.error(msg, e);
                 throw new APIManagementException(msg, e);
@@ -4900,8 +4900,8 @@ public class ApiMgtDAO {
             int tenantId;
             int rateId = -1;
             try {
-                tenantId = IdentityUtil.getTenantIdOFUser(userId);
-            } catch (IdentityException e) {
+                tenantId = IdentityTenantUtil.getTenantIdOfUser(userId);
+            } catch (IdentityRuntimeException e) {
                 String msg = "Failed to get tenant id of user : " + userId;
                 log.error(msg, e);
                 throw new APIManagementException(msg, e);
@@ -4994,8 +4994,8 @@ public class ApiMgtDAO {
         try {
             int tenantId;
             try {
-                tenantId = IdentityUtil.getTenantIdOFUser(userId);
-            } catch (IdentityException e) {
+                tenantId = IdentityTenantUtil.getTenantIdOfUser(userId);
+            } catch (IdentityRuntimeException e) {
                 String msg = "Failed to get tenant id of user : " + userId;
                 log.error(msg, e);
                 throw new APIManagementException(msg, e);
@@ -5167,8 +5167,8 @@ public class ApiMgtDAO {
             int tenantId;
 
             try {
-                tenantId = IdentityUtil.getTenantIdOFUser(userId);
-            } catch (IdentityException e) {
+                tenantId = IdentityTenantUtil.getTenantIdOfUser(userId);
+            } catch (IdentityRuntimeException e) {
                 String msg = "Failed to get tenant id of user : " + userId;
                 log.error(msg, e);
                 throw new APIManagementException(msg, e);
@@ -6217,8 +6217,8 @@ public class ApiMgtDAO {
         int tenantId;
         int apiId = -1;
         try {
-            tenantId = IdentityUtil.getTenantIdOFUser(userId);
-        } catch (IdentityException e) {
+            tenantId = IdentityTenantUtil.getTenantIdOfUser(userId);
+        } catch (IdentityRuntimeException e) {
             String msg = "Failed to get tenant id of user : " + userId;
             log.error(msg, e);
             throw new APIManagementException(msg, e);
