@@ -30,7 +30,6 @@ import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.utils.APIMgtDBUtil;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.identity.core.util.IdentityConfigParser;
-import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -46,11 +45,12 @@ public class APIMgtDAOTest extends TestCase {
 		APIManagerConfiguration config = new APIManagerConfiguration();
 		config.load(dbConfigPath);
 		ServiceReferenceHolder.getInstance()
-		                      .setAPIManagerConfigurationService(new APIManagerConfigurationServiceImpl(
-		                                                                                                config));
+		                      .setAPIManagerConfigurationService(
+									  new APIManagerConfigurationServiceImpl(
+											  config));
 		APIMgtDBUtil.initialize();
 		apiMgtDAO = new ApiMgtDAO();
-		IdentityTenantUtil.setRealmService(new TestRealmService());
+		ServiceReferenceHolder.getInstance().setRealmService(new TestRealmService());
 		String identityConfigPath = System.getProperty("IdentityConfigurationPath");
 		IdentityConfigParser.getInstance(identityConfigPath);
 	}

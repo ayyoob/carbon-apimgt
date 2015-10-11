@@ -3235,7 +3235,7 @@ public final class APIUtil {
      * @return tenantId
      * @throws APIManagementException
      */
-    public static int getTenantId(String userName){
+    public static int getTenantId(String userName) throws APIManagementException{
         //get tenant domain from user name
         String tenantDomain = MultitenantUtils.getTenantDomain(userName);
         RealmService realmService = ServiceReferenceHolder.getInstance().getRealmService();
@@ -3248,11 +3248,10 @@ public final class APIUtil {
             int tenantId = realmService.getTenantManager().getTenantId(tenantDomain);
             return tenantId;
         } catch (UserStoreException e) {
-
-            log.error(e);
+            String msg = "Failed to get tenant id of user : " + userName;
+            log.error(msg, e);
+            throw new APIManagementException(msg, e);
         }
-
-        return -1;
     }
 
     /**

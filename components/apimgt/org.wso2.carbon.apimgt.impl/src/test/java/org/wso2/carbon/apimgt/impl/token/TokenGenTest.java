@@ -30,7 +30,6 @@ import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.utils.APIMgtDBUtil;
 //import org.wso2.carbon.apimgt.impl.utils.TokenGenUtil;
-import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 
 public class TokenGenTest extends TestCase {
     private static final Log log = LogFactory.getLog(TokenGenTest.class);
