@@ -466,6 +466,15 @@ public abstract class AbstractAPIManager implements APIManager {
             if (apiArtifact != null) {
                 return APIUtil.getAPIInformation(apiArtifact, registry);
             } else {
+                //temporary fixed to look up into super tenants public store.
+                if (requestedTenantDomain != null && !requestedTenantDomain.equals(
+                        MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+                    registry = ServiceReferenceHolder.getInstance().
+                            getRegistryService().getGovernanceSystemRegistry(MultitenantConstants.SUPER_TENANT_ID);
+                    artifactManager = APIUtil.getArtifactManager(registry, APIConstants.API_KEY);
+                    apiArtifact = artifactManager.getGenericArtifact(uuid);
+                    return APIUtil.getAPIInformation(apiArtifact, registry);
+                }
                 handleResourceNotFoundException(
                         "Failed to get API. API artifact corresponding to artifactId " + uuid + " does not exist");
             }
